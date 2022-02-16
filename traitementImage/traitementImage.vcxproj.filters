@@ -27,9 +27,21 @@
     <ClCompile Include="Main.cpp">
       <Filter>Fichiers sources\Src</Filter>
     </ClCompile>
+    <ClCompile Include="ImageManager.cpp">
+      <Filter>Fichiers sources\Src</Filter>
+    </ClCompile>
+    <ClCompile Include="FileReader.cpp">
+      <Filter>Fichiers sources\Src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
+      <Filter>Fichiers sources\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageManager.h">
+      <Filter>Fichiers sources\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="FileReader.h">
       <Filter>Fichiers sources\Headers</Filter>
     </ClInclude>
   </ItemGroup>
