@@ -20,7 +20,7 @@ void Main::start()
 			return;
 		}
 
-		imageManager.setImages(listpaths);
+		imageManager.setImages(fileReader.loadImages(listpaths));
 	}
 	else
 	{
