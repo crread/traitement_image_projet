@@ -14,6 +14,9 @@
 
 class FileReader
 {
+
+	bool isInExtension(const std::filesystem::path& path) const;
+
 public:
 	imageData* loadImages(const std::vector<std::string>& paths) const;
 	imageData readImage(const std::string& path) const;

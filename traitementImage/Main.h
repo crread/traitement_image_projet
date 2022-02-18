@@ -19,14 +19,12 @@ class Main {
 public:
 
 	// constructor
-	Main(int argc, char** argv) : _argc(argc), _argv(argv) 
-	{
-		fileReader = FileReader();
-		imageManager = ImageManager();
-	}
+	Main(int argc, char** argv) : _argc(argc), _argv(argv) {}
 
 	// deconstructor
-	~Main() {};
+	~Main() {
+		std::cout << "deconstructor called" << std::endl;
+	};
 
 	void start();
 };

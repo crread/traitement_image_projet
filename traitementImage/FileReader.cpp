@@ -5,15 +5,29 @@ bool FileReader::isDirectory(std::string& path) const
 	return std::filesystem::is_directory(path);
 }
 
+bool FileReader::isInExtension(const std::filesystem::path& path) const
+{
+	const std::string extensions[2] = { ".jpeg", ".jpg" };
+	const std::string path_extensions{ path.extension().u8string() };
+
+	for (const auto& extension : extensions)
+	{	
+		if (path_extensions == extension)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 std::vector<std::string> FileReader::getImagesPathList(std::string& path) const
 {
 	std::vector<std::string> imagePaths;
 
-	const std::string extension = "jpeg";
-
 	for (const auto& entry : std::filesystem::directory_iterator(path))
 	{
-		if (entry.path().extension() == extension)
+		if (isInExtension(entry.path()))
 		{
 			std::string path_string{ entry.path().u8string() };
 			imagePaths.push_back(path_string);
@@ -109,11 +123,11 @@ imageData FileReader::readImage(const std::string& path) const
 imageData* FileReader::loadImages(const std::vector<std::string>& paths) const
 {
 	imageData* images = new imageData[paths.size()];
-	size_t size = 0;
+	size_t size = paths.size();
 
 	for (const auto& path : paths)
 	{
-		images[size] = readImage(path);
+		images[size - paths.size()] = readImage(path); //this weird syntaxe avoid the C6386 warning appearance
 		size++;
 	}
 

@@ -22,16 +22,20 @@ class ImageManager {
     uint32_t numberImages;
 
 public:
-    ImageManager() {};
+    ImageManager() 
+    {
+        std::cout << "image manager constructor called" << std::endl;
+        images = nullptr;
+        numberImages = 0;
+    };
 
     ~ImageManager() 
     {
         for (int i = 0; i < numberImages; i++)
         {
-            auto data = images[i].data;
-            delete[] data;
+            delete[] images[i].data;
         }
-        std::cout << "test" << std::endl;
+        std::cout << "image manager deconstructor called" << std::endl;
         delete[] images;
     };
 
