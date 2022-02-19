@@ -37,7 +37,7 @@ std::vector<std::string> FileReader::getImagesPathList(std::string& path) const
 	return imagePaths;
 }
 
-void FileReader::writeImage(const std::string& path, const imageData& image) const
+void FileReader::writeImage(const std::string& path, const ImageData& image) const
 {
 	struct jpeg_error_mgr jerr;
 	struct jpeg_compress_struct cinfo;
@@ -46,7 +46,7 @@ void FileReader::writeImage(const std::string& path, const imageData& image) con
 
 	cinfo.err = jpeg_std_error(&jerr);
 
-	FILE* file = fopen(path.c_str(), "rb");
+	FILE* file = fopen(path.c_str(), "wb");
 
 	if (file == NULL) {
 		printf("Error: failed to open %s\n", path.c_str());
@@ -66,7 +66,7 @@ void FileReader::writeImage(const std::string& path, const imageData& image) con
 	uint8_t* row = image.data;
 	const uint32_t stride = image.width * image.output_components;
 
-	for (int y = 0; y < image.height; y++) {
+	for (uint32_t y = 0; y < image.height; y++) {
 		jpeg_write_scanlines(&cinfo, &row, 1);
 		row += stride;
 	}
@@ -78,9 +78,9 @@ void FileReader::writeImage(const std::string& path, const imageData& image) con
 	return;
 }
 
-imageData FileReader::readImage(const std::string& path) const
+ImageData  FileReader::readImage(const std::string& path) const
 {
-	imageData newImage;
+	ImageData  newImage;
 
 	struct jpeg_decompress_struct cinfo;
 	struct jpeg_error_mgr jerr;
@@ -107,7 +107,7 @@ imageData FileReader::readImage(const std::string& path) const
 	uint8_t* row = newImage.data;
 	const uint32_t stride = newImage.width * newImage.output_components;
 
-	for (int y = 0; y < newImage.height; y++) {
+	for (uint32_t y = 0; y < newImage.height; y++) {
 		jpeg_read_scanlines(&cinfo, &row, 1);
 		row += stride;
 	}
@@ -120,16 +120,22 @@ imageData FileReader::readImage(const std::string& path) const
 	return newImage;
 }
 
-imageData* FileReader::loadImages(const std::vector<std::string>& paths) const
+ImageData* FileReader::loadImages(ImageManager& imageManager, const std::vector<std::string>& paths) const
 {
-	imageData* images = new imageData[paths.size()];
+	ImageData* images = new ImageData[paths.size()];
 	size_t size = paths.size();
 
 	for (const auto& path : paths)
 	{
-		images[size - paths.size()] = readImage(path); //this weird syntaxe avoid the C6386 warning appearance
+		ImageData image = readImage(path);
+		images[size - paths.size()] = image; //this weird syntaxe avoid the C6386 warning appearance
 		size++;
 	}
+
+	imageManager.setImages(images);
+	imageManager.setNumberImages(size - paths.size());
+
+	std::cout << "images loaded..." << std::endl;
 
 	return images;
 }

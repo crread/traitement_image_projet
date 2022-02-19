@@ -5,12 +5,13 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include "jpeglib.h"
 #include "turbojpeg.h"
 
-struct imageData {
-    uint8_t* data;
+struct ImageData {
+    uint8_t* data; // R,G,B
     uint32_t width;
     uint32_t height;
     uint32_t output_components;
@@ -18,8 +19,8 @@ struct imageData {
 
 class ImageManager {
 
-    imageData* images;
-    uint32_t numberImages;
+    ImageData* images;
+    size_t numberImages;
 
 public:
     ImageManager() 
@@ -31,16 +32,22 @@ public:
 
     ~ImageManager() 
     {
-        for (int i = 0; i < numberImages; i++)
+        for (uint32_t i = 0; i < numberImages; i++)
         {
-            delete[] images[i].data;
+            freeImage(images[i]);
         }
         std::cout << "image manager deconstructor called" << std::endl;
         delete[] images;
     };
 
-    imageData& getImages() const;
-    void setImages(imageData* listPath);
+    ImageData getBackground() const;
+    void freeImage(ImageData& image) const;
+
+    size_t getNumberImages() const;
+    void setNumberImages(size_t numberImages);
+
+    ImageData& getImages() const;
+    void setImages(ImageData* listPath);
 };
 
 #endif // !_IMAGE_H_

@@ -18,9 +18,9 @@ class FileReader
 	bool isInExtension(const std::filesystem::path& path) const;
 
 public:
-	imageData* loadImages(const std::vector<std::string>& paths) const;
-	imageData readImage(const std::string& path) const;
-	void writeImage(const std::string& path, const imageData& image) const;
+	ImageData* loadImages(ImageManager& imageManager, const std::vector<std::string>& paths) const;
+	ImageData readImage(const std::string& path) const;
+	void writeImage(const std::string& path, const ImageData& image) const;
 	bool isDirectory(std::string& path) const;
 	std::vector<std::string> getImagesPathList(std::string& path) const;
 };

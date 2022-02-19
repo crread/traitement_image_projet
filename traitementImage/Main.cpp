@@ -20,7 +20,10 @@ void Main::start()
 			return;
 		}
 
-		imageManager.setImages(fileReader.loadImages(listpaths));
+		fileReader.loadImages(imageManager, listpaths);
+		ImageData backgroundImage = imageManager.getBackground();
+		fileReader.writeImage(std::string("./background.jpg"), backgroundImage);
+		delete[] backgroundImage.data;
 	}
 	else
 	{
