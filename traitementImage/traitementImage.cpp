@@ -1,7 +1,7 @@
 
 #define _CRT_SECURE_NO_DEPRECATE
 
-#include "Main.h"
+#include "Main.hpp"
 
 int main(int argc,char* argv[])
 {

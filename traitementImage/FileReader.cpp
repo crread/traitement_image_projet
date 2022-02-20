@@ -1,8 +1,13 @@
-#include "FileReader.h"
+#include "FileReader.hpp"
 
 bool FileReader::isDirectory(std::string& path) const
 {
 	return std::filesystem::is_directory(path);
+}
+
+void FileReader::createDirectory(std::string& path) const
+{
+	std::filesystem::create_directory(path.c_str());
 }
 
 bool FileReader::isInExtension(const std::filesystem::path& path) const
@@ -37,7 +42,7 @@ std::vector<std::string> FileReader::getImagesPathList(std::string& path) const
 	return imagePaths;
 }
 
-void FileReader::writeImage(const std::string& path, const ImageData& image) const
+void FileReader::writeImage(const std::string& path, const ImageData& image, const J_COLOR_SPACE color_option) const
 {
 	struct jpeg_error_mgr jerr;
 	struct jpeg_compress_struct cinfo;
@@ -58,7 +63,8 @@ void FileReader::writeImage(const std::string& path, const ImageData& image) con
 	cinfo.image_width = image.width;
 	cinfo.image_height = image.height;
 	cinfo.input_components = image.output_components;
-	cinfo.in_color_space = JCS_RGB;
+	cinfo.in_color_space = color_option;
+
 	jpeg_set_defaults(&cinfo);
 
 	jpeg_start_compress(&cinfo, true);
@@ -78,7 +84,7 @@ void FileReader::writeImage(const std::string& path, const ImageData& image) con
 	return;
 }
 
-ImageData  FileReader::readImage(const std::string& path) const
+ImageData FileReader::readImage(const std::string& path) const
 {
 	ImageData  newImage;
 
@@ -120,22 +126,25 @@ ImageData  FileReader::readImage(const std::string& path) const
 	return newImage;
 }
 
-ImageData* FileReader::loadImages(ImageManager& imageManager, const std::vector<std::string>& paths) const
+void FileReader::loadImages(ImageManager& imageManager, const std::vector<std::string>& paths) const
 {
-	ImageData* images = new ImageData[paths.size()];
+	unsigned short coef = 9;
+
+	ImageData* images = new ImageData[coef + 1];
 	size_t size = paths.size();
 
-	for (const auto& path : paths)
+	for (uint32_t i = 0; i < coef; i++)
 	{
-		ImageData image = readImage(path);
-		images[size - paths.size()] = image; //this weird syntaxe avoid the C6386 warning appearance
-		size++;
+		ImageData image = readImage(paths[(size / coef) * i]);
+		images[i] = image;
 	}
 
+	images[coef] = readImage(paths[paths.size() - 1]);
+
 	imageManager.setImages(images);
-	imageManager.setNumberImages(size - paths.size());
+	imageManager.setNumberImages(coef + 1);
 
 	std::cout << "images loaded..." << std::endl;
 
-	return images;
+	return;
 }

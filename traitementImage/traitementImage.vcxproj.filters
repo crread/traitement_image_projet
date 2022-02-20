@@ -35,13 +35,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Main.h">
+    <ClInclude Include="Main.hpp">
       <Filter>Fichiers sources\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="ImageManager.h">
+    <ClInclude Include="ImageManager.hpp">
       <Filter>Fichiers sources\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="FileReader.h">
+    <ClInclude Include="FileReader.hpp">
       <Filter>Fichiers sources\Headers</Filter>
     </ClInclude>
   </ItemGroup>
